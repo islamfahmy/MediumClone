@@ -1,0 +1,55 @@
+{
+  "name": "mediumclonebackend",
+  "version": "1.0.0",
+  "description": "backend for medium's clone",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/islamfahmy/MediumClone.git"
+  },
+  "author": "Mostafa Talaat, Islam Fahmy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/islamfahmy/MediumClone/issues"
+  },
+  "homepage": "https://github.com/islamfahmy/MediumClone#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.9.25",
+    "mongoose-unique-validator": "^2.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.5.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0"
+  },
+  "eslintConfig": {
+    "extends": "airbnb-base",
+    "env": {
+        "es6": true,
+        "browser": true
+    },
+    "rules": {
+        "brace-style": [
+            "error",
+            "stroustrup"
+        ],
+        "comma-dangle": [
+            "error",
+            "never"
+        ],
+        "no-unused-vars": [
+            "warn"
+        ],
+        "no-var": [
+            "off"
+        ],
+        "one-var": [
+            "off"
+        ]
+    }
+}
+}
