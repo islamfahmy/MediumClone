@@ -11,10 +11,7 @@ const schema = new mongoose.Schema({
   followers: [{ type: mongoose.SchemaTypes.ObjectId }],
   history: [{ type: mongoose.SchemaTypes.ObjectId }],
   savedArticles: [{ type: mongoose.SchemaTypes.ObjectId }],
-  articles: {
-    drafts: [{ type: mongoose.SchemaTypes.ObjectId }],
-    published: [[{ type: mongoose.SchemaTypes.ObjectId }]]
-  },
+  articles: [{ type: mongoose.Schema.Types.ObjectId , ref: 'Article', }],//edited
   perfrences: [{ type: String }]
 
 });
