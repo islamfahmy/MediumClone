@@ -17,9 +17,12 @@
     },
     "homepage": "https://github.com/islamfahmy/MediumClone#readme",
     "dependencies": {
+        "apollo-server": "^2.16.1",
         "express": "^4.17.1",
+        "graphql": "^15.3.0",
         "mongoose": "^5.9.25",
-        "mongoose-unique-validator": "^2.0.3"
+        "mongoose-unique-validator": "^2.0.3",
+        "nodemon": "^2.0.4"
     },
     "devDependencies": {
         "eslint": "^7.5.0",
