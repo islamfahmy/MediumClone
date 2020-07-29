@@ -9,7 +9,7 @@ const schema = new mongoose.Schema({
     comments :[{ body : String , User : {type: mongoose.Schema.Types.ObjectId,ref: 'User'} }],
     readers :[{ type: mongoose.Schema.Types.ObjectId , ref: 'User', }],
     tags :[String],
-    time:Date
+    //time:Date
 
 })
 schema.set('toJSON', (document, returnedObject) => {

@@ -1,5 +1,5 @@
 const { ApolloServer } = require('apollo-server');
-const User = require('./controllers/user');
+const User = require('./controllers/article');
 
 const server = new ApolloServer({ typeDefs: User.typeDefs, resolvers: User.resolvers });
 
