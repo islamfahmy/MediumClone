@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const { ApolloServer, gql } = require('apollo-server');
+const { gql } = require('apollo-server');
 
 const users = [
   {
@@ -53,13 +53,18 @@ const typeDefs = gql`
   }
 
   type Query {
-    users: [User]!
+    users(username: String): [User]!
   }
 `;
 
 const resolvers = {
   Query: {
-    users: () => users
+    users: (root, args) => {
+      if (args.username) {
+        return users.filter((u) => u.username === args.username);
+      }
+      return users;
+    }
   },
   User: {
     followers: ({ followers }) => users.filter((u) => followers.includes(u._id)),
