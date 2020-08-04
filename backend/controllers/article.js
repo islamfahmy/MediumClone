@@ -1,22 +1,27 @@
-const { gql } = require('apollo-server');
+const { gql } = require('apollo-server')
+const { v1: uuid } = require('uuid')
+/*const articles = require('../models/Article')
+const user = require('../models/User')*/
 const articles=[
 {
     title:"tittle 1",
     content:"this project is on fire" ,
-    user: 1,
+    username:"Musty",
+    userID: 1,
     likes :2,
-    comments :[{body:"try comments" ,User:1},{body:"comments working" ,User:2}],
-    readers :[3,2],
+    comments :[{body:"try comments" ,username:"Musty3" ,userID: 3},{body:"comments working" ,username:"Musty2",userID: 2}],
+    readers :[{username:"Musty3" ,userID: 3}],
     tags :['js'],
     _id:1
 },
 {
     title:"tittle 2",
     content:"Acing graphql" ,
-    user: 2,
+    username:"Musty2",
+    userID: 2,
     likes :2,
     comments :[],
-    readers :[1,2],
+    readers :[{username:"Musty" ,userID: 1}],
     tags :['c++'],
     _id:1  
 }]
@@ -55,38 +60,81 @@ const users = [
     perferences: ['c++']
   }
 ]
+
 const typeDefs = gql`
 type Comment{
    body:String!
-   User:String!
+   username:String!
+   userID:ID!
 },
+type Reader{
+  username:String!
+   userID:ID!  
+}
 type Article{
     _id:ID!
     title:String!
     content:String!
-    user:String!
+    username:String!
+    userID:ID!
     likes:Int!
     comments: [Comment]  
-   #readers:[String!]
+    readers:[Reader!]
     tags:[String!]
 },
 type  Query{
     articles:[Article!]
 
 }
+type Mutation {
+   addArticle(
+title:String!
+content:String!
+userID:ID!
+tags:[String!]
+   ):Article
+likeArticle(
+   id:ID!
+   ):Article
+readArticle(
+   userID:ID!
+   id:ID!
+):Article
+
+
+ }
 `
 const resolvers = {
-Article:{
-    user :(u)=>(users.find((u1)=>u1.id===u.id)).username,
-    //readers :({readers})=> (users.filter((u) => readers.includes(u._id)))
-
-},
-Comment:{
-User :(u)=>(users.find((u1)=>u1.id===u.id)).username
-
-},
 Query: {
     articles:()=> articles
+
+    },
+    Mutation: {
+        addArticle:(root,args)=>
+        {
+         const user=users.find(u=>u._id.toString()===args.userID.toString())
+         const article ={ ...args, _id: uuid() ,username:user.username,likes:0 }
+         articles.concat(article)
+         return article;
+
+        },
+        likeArticle:(root,args)=>
+        {
+          article =  articles.find(a =>a._id.toString()===args.id.toString());
+          article.likes++
+          return article;
+        },
+        readArticle:(root,args)=>
+        {
+        const article =  articles.find(a =>a._id.toString()===args.id.toString());
+        const user=users.find(u=>u._id.toString()===args.userID.toString())
+        article.readers=article.readers.concat({username:user.username,userID:args.userID})
+        console.log(article.readers)
+        return article
+        }
+// to do add this article in history 
+
+        
     }
 
 }
