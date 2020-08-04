@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 const { gql } = require('apollo-server');
+const User = require('../models/User');
 
 const users = [
   {
@@ -59,16 +60,14 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    users: (root, args) => {
+    users: async (root, args) => {
       if (args.username) {
-        return users.filter((u) => u.username === args.username);
+        const user = await User.find({ username: args.username }).lean();
+        return user;
       }
-      return users;
+      const allUsers = await User.find({}).lean();
+      return allUsers;
     }
-  },
-  User: {
-    followers: ({ followers }) => users.filter((u) => followers.includes(u._id)),
-    following: ({ following }) => users.filter((u) => following.includes(u._id))
   }
 };
 module.exports = { typeDefs, resolvers };
