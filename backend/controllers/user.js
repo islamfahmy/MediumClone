@@ -1,6 +1,9 @@
+/* eslint-disable no-return-await */
 /* eslint-disable no-underscore-dangle */
-const { gql } = require('apollo-server');
+const { gql, UserInputError } = require('apollo-server');
+const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const { create } = require('../models/User');
 
 const users = [
   {
@@ -55,6 +58,12 @@ const typeDefs = gql`
 
   type Query {
     users(username: String): [User]!
+    currentUser: User
+  }
+  type Mutation {
+    createUser(username: String!, email: String!, password: String!): User!
+    followUser(id: String!): User!
+    unfollowUser(id: String!): User!
   }
 `;
 
@@ -67,6 +76,41 @@ const resolvers = {
       }
       const allUsers = await User.find({}).lean();
       return allUsers;
+    },
+    currentUser: async (root, args, context) => await User.findById(context.id)
+  },
+  Mutation: {
+    createUser: async (root, args) => {
+      const newUser = new User({
+        username: args.username,
+        email: args.email,
+        passwordHash: await bcrypt.hash(args.password, process.env.PASSWORD_SALT)
+      });
+      try {
+        await newUser.save();
+        return newUser;
+      }
+      catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error.message);
+        throw new UserInputError(error.message);
+      }
+    },
+    followUser: async (root, args, context) => {
+      const currentUser = await User.findById(context.id);
+      currentUser.followeing = currentUser.followeing.filter((u) => u !== args.id);
+    },
+    unfollowUser: async (root, args, context) => {
+      const currentUser = await User.findById(context.id);
+      currentUser.followers = currentUser.followers.concat(args.id);
+    },
+    addPerfrence: async (root, args, context) => {
+      const currentUser = await User.findById(context.id);
+      currentUser.perferences = currentUser.perferences.concat(args.perference);
+    },
+    removePerfrence: async (root, args, context) => {
+      const currentUser = await User.findById(context.id);
+      currentUser.perferences = currentUser.perferences.filter((p) => p !== args.perference);
     }
   }
 };

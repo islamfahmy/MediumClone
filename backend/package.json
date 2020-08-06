@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev" :"nodemon index.js"
+        "dev": "nodemon index.js"
     },
     "repository": {
         "type": "git",
@@ -19,6 +19,7 @@
     "homepage": "https://github.com/islamfahmy/MediumClone#readme",
     "dependencies": {
         "apollo-server": "^2.16.1",
+        "bcrypt": "^5.0.0",
         "express": "^4.17.1",
         "graphql": "^15.3.0",
         "mongoose": "^5.9.25",
