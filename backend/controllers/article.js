@@ -1,7 +1,8 @@
 const { gql } = require('apollo-server')
 const { v1: uuid } = require('uuid')
-/*const articles = require('../models/Article')
-const user = require('../models/User')*/
+const Article = require('../models/Article')
+/*const user = require('../models/User')*/
+var mongoose = require('mongoose')
 var articles=[
 {
     title:"tittle 1",
@@ -113,15 +114,25 @@ readArticle(
 `
 const resolvers = {
 Query: {
-    articles:()=> articles
+    articles:async ()=> {
+      const articlesa =await  Article.find({});
+      console.log(articlesa)
+      return articlesa
 
-    },
+    }
+  },
     Mutation: {
         addArticle:(root,args)=>
         {
          const user=users.find(u=>u._id.toString()===args.userID.toString())
-         const article ={ ...args, _id: uuid() ,username:user.username,likes:0 }
-         articles.concat(article)
+         const article =new Article({ ...args,username:user.username,likes:0,readers:0,likeList:[],comments:[],tags:[]})
+         article.userID= mongoose.Types.ObjectId( article.userID );
+         article.save().then(result => {
+         console.log('article saved!')
+         mongoose.connection.close()
+         }).catch((error) => {
+         console.log('error saving:', error.message)
+          })
          return article;
 
         },
