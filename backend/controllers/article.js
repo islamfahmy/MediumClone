@@ -2,16 +2,17 @@ const { gql } = require('apollo-server')
 const { v1: uuid } = require('uuid')
 /*const articles = require('../models/Article')
 const user = require('../models/User')*/
-const articles=[
+var articles=[
 {
     title:"tittle 1",
     content:"this project is on fire" ,
     username:"Musty",
     userID: 1,
-    likes :2,
+    likes :1,
+    likeList:[{username:"Musty3" ,userID: 3}],
     comments :[{body:"try comments" ,username:"Musty3" ,userID: 3},{body:"comments working" ,username:"Musty2",userID: 2}],
-    readers :[{username:"Musty3" ,userID: 3}],
-    tags :['js'],
+    readers :1,
+    tags :['js'], 
     _id:1
 },
 {
@@ -19,9 +20,10 @@ const articles=[
     content:"Acing graphql" ,
     username:"Musty2",
     userID: 2,
-    likes :2,
+    likes :1,
+    likeList:[{username:"Musty" ,userID: 1}],
     comments :[],
-    readers :[{username:"Musty" ,userID: 1}],
+    readers :1,
     tags :['c++'],
     _id:1  
 }]
@@ -67,8 +69,11 @@ type Comment{
    username:String!
    userID:ID!
 },
-type Reader{
-  username:String!
+type yesNo{
+    done:Boolean!
+}
+type List{
+  username:String
    userID:ID!  
 }
 type Article{
@@ -78,8 +83,9 @@ type Article{
     username:String!
     userID:ID!
     likes:Int!
+    likeList:[List!]
     comments: [Comment]  
-    readers:[Reader!]
+    readers:Int!
     tags:[String!]
 },
 type  Query{
@@ -94,13 +100,14 @@ userID:ID!
 tags:[String!]
    ):Article
 likeArticle(
+    userID:ID!
    id:ID!
    ):Article
 readArticle(
-   userID:ID!
    id:ID!
 ):Article
-
+ deleteArticle(id:ID!)
+ :yesNo
 
  }
 `
@@ -122,18 +129,29 @@ Query: {
         {
           article =  articles.find(a =>a._id.toString()===args.id.toString());
           article.likes++
+          const user = users.find(u=>u._id.toString()===args.userID.toString())
+          console.log(user)
+
+          article.likeList=article.likeList.concat({username:user.username  ,userID:user._id})
+          console.log(article.likeList)
           return article;
         },
         readArticle:(root,args)=>
         {
         const article =  articles.find(a =>a._id.toString()===args.id.toString());
-        const user=users.find(u=>u._id.toString()===args.userID.toString())
-        article.readers=article.readers.concat({username:user.username,userID:args.userID})
-        console.log(article.readers)
+        article.readers++
         return article
+        },
+        deleteArticle:(root,args)=>
+        {
+           articles= articles.filter(a =>a._id.toString()===args.id.toString())
+           const yesNo={done:true}
+            return yesNo
         }
-// to do add this article in history 
 
+
+
+    
         
     }
 

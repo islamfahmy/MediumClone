@@ -4,7 +4,7 @@ const { gql, UserInputError } = require('apollo-server');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const { create } = require('../models/User');
-
+mongodb+srv://eshta:eshta@cluster0.rhjzx.mongodb.net/medium?retryWrites=true&w=majority
 const users = [
   {
     _id: 1,
