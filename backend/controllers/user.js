@@ -84,7 +84,7 @@ const resolvers = {
       const newUser = new User({
         username: args.username,
         email: args.email,
-        passwordHash: await bcrypt.hash(args.password, process.env.PASSWORD_SALT)
+        passwordHash: args.password
       });
       try {
         await newUser.save();
@@ -98,7 +98,7 @@ const resolvers = {
     },
     followUser: async (root, args, context) => {
       const currentUser = await User.findById(context.id);
-      currentUser.followeing = currentUser.followeing.filter((u) => u !== args.id);
+      currentUser.following = currentUser.followeing.filter((u) => u !== args.id);
     },
     unfollowUser: async (root, args, context) => {
       const currentUser = await User.findById(context.id);

@@ -1,7 +1,7 @@
 const { gql } = require('apollo-server')
 const { v1: uuid } = require('uuid')
 const Article = require('../models/Article')
-/*const user = require('../models/User')*/
+const User = require('../models/User')
 var mongoose = require('mongoose')
 var articles=[
 {
@@ -154,7 +154,7 @@ Query: {
         return article
         },
         deleteArticle:(root,args)=>
-        {
+        {      const user=
            articles= articles.filter(a =>a._id.toString()===args.id.toString())
            const yesNo={done:true}
             return yesNo

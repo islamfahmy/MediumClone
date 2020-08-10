@@ -7,7 +7,7 @@ const schema = new mongoose.Schema({
     userID: { type: mongoose.Schema.Types.ObjectId , ref: 'User', required :true },
     username:{type :String,required: true  },
     likes:Number,
-    likeList:{username:String,userID:{type: mongoose.Schema.Types.ObjectId,ref: 'User'}},
+    likeList:[{username:String,userID:{type: mongoose.Schema.Types.ObjectId,ref: 'User'}}],
     comments :[{ body : String , username:String,userID:{type: mongoose.Schema.Types.ObjectId,ref: 'User'}}],
     readers :Number,
     tags :[String],
