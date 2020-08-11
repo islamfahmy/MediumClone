@@ -84,7 +84,13 @@ const resolvers = {
       const newUser = new User({
         username: args.username,
         email: args.email,
-        passwordHash: args.password
+        password: args.password,
+        following:[],
+        followers:[],
+        history:[],
+        savedArticles:[],
+        articles:[],
+        perfrences:[]
       });
       try {
         await newUser.save();
@@ -98,12 +104,15 @@ const resolvers = {
     },
     followUser: async (root, args, context) => {
       const currentUser = await User.findById(context.id);
-      currentUser.following = currentUser.followeing.filter((u) => u !== args.id);
-    },
+      currentUser.following = currentUser.following.concat(args.id);
+      //todo add el follower da 3nd el followed user 
+     },
     unfollowUser: async (root, args, context) => {
       const currentUser = await User.findById(context.id);
-      currentUser.followers = currentUser.followers.concat(args.id);
+      currentUser.following = currentUser.following.filter((u) => u !== args.id);
+     // todo remove el follower da mn 3nd el followed user 
     },
+    // todo add remove follower lama wa7ed mn el followers y3mel lel current user unfollow
     addPerfrence: async (root, args, context) => {
       const currentUser = await User.findById(context.id);
       currentUser.perferences = currentUser.perferences.concat(args.perference);

@@ -132,6 +132,7 @@ Query: {
          mongoose.connection.close()
          }).catch((error) => {
          console.log('error saving:', error.message)
+         throw new UserInputError(error.message);
           })
          return article;
 
@@ -154,7 +155,7 @@ Query: {
         return article
         },
         deleteArticle:(root,args)=>
-        {      const user=
+        {      // delete from the user mosta 
            articles= articles.filter(a =>a._id.toString()===args.id.toString())
            const yesNo={done:true}
             return yesNo
