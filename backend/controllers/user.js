@@ -4,7 +4,6 @@ const { gql, UserInputError } = require('apollo-server');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const { create } = require('../models/User');
-mongodb+srv://eshta:eshta@cluster0.rhjzx.mongodb.net/medium?retryWrites=true&w=majority
 const users = [
   {
     _id: 1,
@@ -56,11 +55,11 @@ const typeDefs = gql`
     perferences: [String]!
   }
 
-  type Query {
+  extend type Query {
     users(username: String): [User]!
     currentUser: User
   }
-  type Mutation {
+  extend type Mutation {
     createUser(username: String!, email: String!, password: String!): User!
     followUser(id: String!): User!
     unfollowUser(id: String!): User!
@@ -113,14 +112,14 @@ const resolvers = {
      // todo remove el follower da mn 3nd el followed user 
     },
     // todo add remove follower lama wa7ed mn el followers y3mel lel current user unfollow
-    addPerfrence: async (root, args, context) => {
+    /*addPerfrence: async (root, args, context) => {
       const currentUser = await User.findById(context.id);
       currentUser.perferences = currentUser.perferences.concat(args.perference);
     },
     removePerfrence: async (root, args, context) => {
       const currentUser = await User.findById(context.id);
       currentUser.perferences = currentUser.perferences.filter((p) => p !== args.perference);
-    }
+    }*/
   }
 };
 module.exports = { typeDefs, resolvers };

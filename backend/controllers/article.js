@@ -89,7 +89,7 @@ type Article{
     readers:Int!
     tags:[String!]
 },
-type  Query{
+ type  Query{
     articles:[Article!]
 
 }
