@@ -50,9 +50,9 @@ const typeDefs = gql`
     email: String!
     following: [User]!
     followers: [User]!
-    # recentlyViewedArticles: [Article]!
-    # savedArticles: [Article]!
-    # articles: [Article]!
+    #recentlyViewedArticles: [Article]!
+    #savedArticles: [Article]!
+    articles: [Article]!
     perferences: [String]!
   }
 

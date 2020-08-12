@@ -10,7 +10,7 @@ const resolvers = _.merge({}, Article.resolvers, User.resolvers);
 const MongoURI = config.MONGODB_PROD_URI;
 console.log('connecting to', MongoURI);
 
-mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true ,useFindAndModify: false })
   .then((result) => {
     console.log('connected to MongoDB');
   })
@@ -19,7 +19,7 @@ mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   });
 
 const server = new ApolloServer({ typeDefs: [Article.typeDefs, User.typeDefs], resolvers });
-console.log(server);
+//console.log(server);
 // The `listen` method launches a web server.
 server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`);

@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server')
+const { gql, UserInputError } = require('apollo-server');
 const { v1: uuid } = require('uuid')
 const Article = require('../models/Article')
 const User = require('../models/User')
@@ -122,31 +122,36 @@ Query: {
     }
   },
     Mutation: {
-        addArticle:(root,args)=>
-        {
-         const user=users.find(u=>u._id.toString()===args.userID.toString())
+        addArticle:async (root,args)=>
+        { const user = await User.findById(args.userID,'username').lean()
+          console.log(user)
          const article =new Article({ ...args,username:user.username,likes:0,readers:0,likeList:[],comments:[],tags:[]})
-         article.userID= mongoose.Types.ObjectId( article.userID );
+         article.userID= args.userID
          article.save().then(result => {
          console.log('article saved!')
-         mongoose.connection.close()
          }).catch((error) => {
          console.log('error saving:', error.message)
          throw new UserInputError(error.message);
           })
+        await  User.findByIdAndUpdate(args.userID, { $push: { articles : article.id} }) 
          return article;
 
         },
-        likeArticle:(root,args)=>
-        {
-          article =  articles.find(a =>a._id.toString()===args.id.toString());
-          article.likes++
-          const user = users.find(u=>u._id.toString()===args.userID.toString())
-          console.log(user)
+        likeArticle:async (root,args)=>
+        {  const user = await User.findById(args.userID,'username').lean()
+          const article =await Article.findById(args.id,'likeList')
+          //console.log(article)
+          if(article.likeList.find(a=>a.userID.toString()===args.userID.toString()))
+          {
 
-          article.likeList=article.likeList.concat({username:user.username  ,userID:user._id})
-          console.log(article.likeList)
-          return article;
+            throw new UserInputError("already liked");
+         
+            return null 
+          }
+
+           return  await Article.findByIdAndUpdate(args.id,{ $push:{likeList:{userID:args.userID,username:user.username}}}, { new: true })
+           
+
         },
         readArticle:(root,args)=>
         {
