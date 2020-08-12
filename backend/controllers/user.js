@@ -72,15 +72,12 @@ const id = '5f33131197bd875163a08fdf';
 
 const resolvers = {
   Query: {
+    // eslint-disable-next-line arrow-body-style
     users: async (root, args) => {
-      if (args.username) {
-        const user = await User.find({ username: args.username }).lean();
-        return user;
-      }
-      const allUsers = await User.find({}).lean();
-      return allUsers;
+      return args.username ? await User.find({ username: args.username }).lean()
+        : await User.find({}).lean();
     },
-    currentUser: async (root, args, context) => await User.findById(id)
+    currentUser: async (root, args, context) => await User.findById(id).lean()
   },
   Mutation: {
     createUser: async (root, args) => {
@@ -94,8 +91,6 @@ const resolvers = {
         return newUser;
       }
       catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error.message);
         throw new UserInputError(error.message);
       }
     },
