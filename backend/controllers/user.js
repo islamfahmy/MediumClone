@@ -2,8 +2,9 @@
 /* eslint-disable no-underscore-dangle */
 const { gql, UserInputError } = require('apollo-server');
 const bcrypt = require('bcrypt');
+const config = require('../util/config');
 const User = require('../models/User');
-const { create } = require('../models/User');
+
 const users = [
   {
     _id: 1,
@@ -62,9 +63,12 @@ const typeDefs = gql`
   extend type Mutation {
     createUser(username: String!, email: String!, password: String!): User!
     followUser(id: String!): User!
-    unfollowUser(id: String!): User!
+    unFollowUser(id: String!): User!
+    addPerference(perference: String!): User!
+    removePerference(perference: String!): User!
   }
 `;
+const id = '5f33131197bd875163a08fdf';
 
 const resolvers = {
   Query: {
@@ -76,20 +80,14 @@ const resolvers = {
       const allUsers = await User.find({}).lean();
       return allUsers;
     },
-    currentUser: async (root, args, context) => await User.findById(context.id)
+    currentUser: async (root, args, context) => await User.findById(id)
   },
   Mutation: {
     createUser: async (root, args) => {
       const newUser = new User({
         username: args.username,
         email: args.email,
-        password: args.password,
-        following:[],
-        followers:[],
-        history:[],
-        savedArticles:[],
-        articles:[],
-        perfrences:[]
+        password: await bcrypt.hash(args.password, Number(config.PASSWORD_SALT))
       });
       try {
         await newUser.save();
@@ -101,26 +99,45 @@ const resolvers = {
         throw new UserInputError(error.message);
       }
     },
+    unFollowUser: async (root, args, context) => {
+      try {
+        await User.findByIdAndUpdate(args.id,
+          { $pull: { followers: id } });
+        return await User.findByIdAndUpdate(id, { $pull: { following: args.id } }, { new: true });
+      }
+      catch (error) {
+        throw new UserInputError(error.message);
+      }
+    },
     followUser: async (root, args, context) => {
-      const currentUser = await User.findById(context.id);
+      const currentUser = await User.findById(id);
       currentUser.following = currentUser.following.concat(args.id);
-      //todo add el follower da 3nd el followed user 
-     },
-    unfollowUser: async (root, args, context) => {
-      const currentUser = await User.findById(context.id);
-      currentUser.following = currentUser.following.filter((u) => u !== args.id);
-     // todo remove el follower da mn 3nd el followed user 
+      try {
+        await User.findByIdAndUpdate(args.id, { $push: { followers: id } });
+        return await User.findByIdAndUpdate(id, { $push: { following: id } }, { new: true });
+      }
+      catch (error) {
+        throw new UserInputError(error.message);
+      }
     },
-    // todo add remove follower lama wa7ed mn el followers y3mel lel current user unfollow
-    /*addPerfrence: async (root, args, context) => {
-      const currentUser = await User.findById(context.id);
-      currentUser.perferences = currentUser.perferences.concat(args.perference);
+    addPerference: async (root, args, context) => {
+      try {
+        return await User.findByIdAndUpdate(id, { $push: { perferences: args.perference } },
+          { new: true });
+      }
+      catch (error) {
+        throw new UserInputError();
+      }
     },
-    removePerfrence: async (root, args, context) => {
-      const currentUser = await User.findById(context.id);
-      currentUser.perferences = currentUser.perferences.filter((p) => p !== args.perference);
-    }*/
+    removePerference: async (root, args, context) => {
+      try {
+        return await User.findByIdAndUpdate(id, { $pull: { perferences: args.perference } },
+          { new: true });
+      }
+      catch (error) {
+        throw new UserInputError();
+      }
+    }
   }
 };
 module.exports = { typeDefs, resolvers };
-// comment to try ssh keys
