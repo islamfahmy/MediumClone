@@ -4,7 +4,8 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { ApolloClient, InMemoryCache, ApolloProvider, gql, HttpLink } from '@apollo/client';
-
+import {Provider} from 'react-redux'
+import store from './store'
 const client = new ApolloClient({
   link: new HttpLink({
     uri: 'http://localhost:4000',
@@ -32,8 +33,10 @@ client
   })
   .then(result => console.log(result));
 ReactDOM.render(
-  <ApolloProvider client={client}>
+  <ApolloProvider client={client} >
+    <Provider store={store}>
     <App />
+    </Provider>
     </ApolloProvider>
   ,
   document.getElementById('root')
