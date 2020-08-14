@@ -1,26 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import ArticleList from'./components/ArticleList'
+import { useSelector, useDispatch } from 'react-redux'
+const init ={type:'article/init'}
+const App = ()=>
+{
+  const dispatch = useDispatch()
+   const articles =useSelector(state => state)
+   const handleclick=()=>
+   {
+    dispatch(init)
+   }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  
+    <div> 
+    <button onClick={handleclick}>show </button>
+  <ArticleList articles={articles}/>
+  </div>
+  )
 }
-
 export default App;

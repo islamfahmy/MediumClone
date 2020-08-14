@@ -122,7 +122,7 @@ const resolvers = {
   Mutation: {
     addArticle: async (root, args) => {
       const article = new Article({
-        ...args, username: user.username, userID: user.id
+        ...args, username: user.username, userID: args.userID
       });
       try {
         const savedArticle = await article.save();
@@ -130,7 +130,7 @@ const resolvers = {
         return savedArticle;
       }
       catch (error) {
-        throw new UserInputError();
+        throw new UserInputError(error);
       }
     },
     likeArticle: async (root, args) => {
@@ -148,10 +148,14 @@ const resolvers = {
       try {
         const article = await Article.findByIdAndDelete(args.id);
         await User.findByIdAndUpdate(article.userID, { $pull: { articles: article._id } });
+       return {done:true}
       }
       catch (error) {
-        throw new UserInputError();
+        throw new UserInputError(error);
+         return {done:false}
+      
       }
+
     }
   }
 };

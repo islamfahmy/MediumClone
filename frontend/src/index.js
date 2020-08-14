@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { ApolloClient, InMemoryCache, ApolloProvider, gql, HttpLink } from '@apollo/client';
@@ -12,26 +11,6 @@ const client = new ApolloClient({
   }),
   cache: new InMemoryCache()
 });
-client
-  .query({
-    query: gql`
-      query {
-        users{
-          _id
-          username
-          email
-          following{
-            username
-          }
-          followers{
-            username
-          }
-          perferences
-      }
-    }
-    `
-  })
-  .then(result => console.log(result));
 ReactDOM.render(
   <ApolloProvider client={client} >
     <Provider store={store}>
