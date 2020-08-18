@@ -1,4 +1,3 @@
-import React from 'react';
 var articles = [
   {
     title: 'tittle 1',
@@ -25,7 +24,7 @@ var articles = [
     _id: 1
   }];
 
-const articleReduer=(state=[],action)=>
+const articleReduer=(state=articles,action)=>
 {
    if(action.type==='article/init')
    	return articles
