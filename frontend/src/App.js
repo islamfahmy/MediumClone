@@ -7,6 +7,13 @@ import {init} from     './redux/actions/atricleActions'
 import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Home from './components/homepage'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom"
+import Header from './components/header'
 const App = ()=>
 {
   const dispatch = useDispatch()
@@ -21,13 +28,25 @@ const App = ()=>
    }
   return (
   
-    <div className="container">
+    <div className="container" class="col-sm-12">
+     <Header/>
+       <Router>
+     
+       <Switch>
+          <Route  path="/">
      <Home articles={articles}/>  
-    <Button onClick={handleUsersButton}>show users</Button>
-    <UsersList users={users}/>
-    <button onClick={handleclick}>show articles</button>
-  <ArticleList articles={articles}/>
-  </div>
+            </Route>
+        </Switch>
+     
+       </Router>
+ 
+   
+   </div>
   )
 }
 export default App;
+
+ /*   <Button onClick={handleUsersButton}>show users</Button>
+<UsersList users={users}/>
+  <ArticleList articles={articles}/>
+    <button onClick={handleclick}>show articles</button>*/
