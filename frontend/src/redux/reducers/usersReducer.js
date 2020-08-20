@@ -37,6 +37,8 @@ const reducer = (state = initialState, action) => {
 	switch (action.type) {
 		case "USERS/GET_USERS":
 			return state;
+		case "USERS/ADD_USER":
+			return [...state, action.data];
 		default:
 			return state;
 	}
