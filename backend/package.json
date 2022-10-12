@@ -18,7 +18,7 @@
     },
     "homepage": "https://github.com/islamfahmy/MediumClone#readme",
     "dependencies": {
-        "apollo-server": "^2.16.1",
+        "apollo-server": "^2.25.4",
         "bcrypt": "^5.0.0",
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
